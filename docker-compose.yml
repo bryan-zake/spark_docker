@@ -1,0 +1,11 @@
+version: '3'
+
+#docker container exec -it vigilant_almeida jupyter notebook list
+#docker container run -itd -p 8888:8888 spark/install
+
+services:
+   jupyter:
+      image: spark/install
+      ports:
+        - '8888:8888'
+
