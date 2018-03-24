@@ -18,8 +18,11 @@ RUN pip3 install pandas
 
 RUN ln -sf /dev/stdout 
 
-
 #Create permanent volumes for this container
+VOLUME /notebooks
+
+RUN apt-get install -y wget
+RUN wget http://apache.claz.org/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz 
 
 
 EXPOSE 8081 8088 8888

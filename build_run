@@ -1,0 +1,4 @@
+docker build -t spark/install .
+docker-compose up -d
+docker container exec sparkdocker_jupyter_1 jupyter notebook list
+
