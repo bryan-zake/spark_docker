@@ -23,7 +23,21 @@ VOLUME /notebooks
 
 RUN apt-get install -y wget
 RUN wget http://apache.claz.org/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz 
+RUN tar -zxvf spark-2.3.0-bin-hadoop2.7.tgz
 
+RUN apt-get install -y curl
+RUN curl -L -o jupyter-scala https://git.io/vrHhi && chmod +x jupyter-scala && ./jupyter-scala && rm -f jupyter-scala
+
+ENV SPARK_HOME='/spark-2.3.0-bin-hadoop2.7' 
+ENV PATH=$SPARK_HOME:$PATH 
+ENV PYTHONPATH=$SPARK_HOME/python/:$PYTHON_PATH 
+ENV PYSPARK_DRIVER_PATH="jupyter" 
+ENV PYSPARK_DRIVER_PATH="notebook" 
+ENV PYSPARK_PYTHON=python3 
+
+RUN chmod 777 spark-2.3.0-bin-hadoop2.7 \
+    && chmod 777 spark-2.3.0-bin-hadoop2.7/python \
+    && chmod 777 spark-2.3.0-bin-hadoop2.7/python/pyspark
 
 EXPOSE 8081 8088 8888
 
