@@ -8,7 +8,5 @@ This is a container to run Spark on Docker with a Jupyter Notebook for developme
 ## Accessing your Notebooks
 `docker container exec sparkdocker_jupyter_1 jupyter notebook list`
 
-## Backing up your Notebooks
-
-## Sample Notebook
-
+## Retrieving your Notebooks
+If you want to backup your Notebooks more easily, it might make more sense to use a [bind-mount](https://docs.docker.com/storage/bind-mounts/). Oherwise you will have to go into /var/lib/docker/volumes/ to backup your volume.
