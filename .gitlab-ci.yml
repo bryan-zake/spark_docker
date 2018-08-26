@@ -1,0 +1,10 @@
+before_script:
+  docker build -t spark_docker .
+
+create_container:
+  script:
+    docker-compose up -d
+    
+jupyter_running:
+  script:
+    docker container exec sparkdocker_jupyter_1 jupyter notebook list
