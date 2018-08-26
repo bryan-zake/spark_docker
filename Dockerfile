@@ -1,4 +1,5 @@
 FROM debian:stretch-slim 
+MAINTAINER bryan-zake
 
 #Run these separately in case one fails
 RUN apt-get update 
