@@ -18,7 +18,7 @@ RUN pip3 install pandas
 
 RUN ln -sf /dev/stdout 
 
-#Create permanent volumes for this container
+#Create volumes for this container
 VOLUME /notebooks
 
 RUN apt-get install -y wget
