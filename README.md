@@ -1,5 +1,5 @@
 # Spark 2.3.1 on Docker
-This is a container to run Spark on Docker with a Jupyter Notebook server. 
+This is a container to run Spark on Docker with a Jupyter Notebook for development. 
 
 ## Build
 
