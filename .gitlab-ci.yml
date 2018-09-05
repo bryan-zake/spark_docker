@@ -1,10 +1,45 @@
 before_script:
-  docker build -t spark_docker .
+  - apt-get update 
+  - apt-get install -y python3 
+  - apt-get install -y python3-pip 
+#allows java to correctly install
+  - mkdir -p /usr/share/man/man1
+  - apt-get install -y default-jre 
+  - apt-get install -y scala 
+  - apt-get install -y curl
+  - apt-get install -y wget
+  
+#Install python libraries
+  - pip3 install jupyter 
+  - pip3 install py4j
+  - pip3 install sklearn
+  - pip3 install numpy
+  - pip3 install pandas
+  
+  - ln -sf /dev/stdout 
 
-create_container:
+#Install Spark
+  - wget http://apache.claz.org/spark/spark-2.3.1/spark-2.3.1-bin-hadoop2.7.tgz 
+  - tar -zxvf spark-2.3.1-bin-hadoop2.7.tgz
+  - chmod 777 spark-2.3.1-bin-hadoop2.7
+  - chmod 777 spark-2.3.1-bin-hadoop2.7/python
+  - chmod 777 spark-2.3.1-bin-hadoop2.7/python/pyspark
+
+#Install Jupyter
+  - curl -L -o jupyter-scala https://git.io/vrHhi
+  - chmod +x jupyter-scala
+  - ./jupyter-scala 
+  - rm -f jupyter-scala
+
+#Setup Spark
+  - export SPARK_HOME='/spark-2.3.1-bin-hadoop2.7' 
+  - export PATH=$SPARK_HOME:$PATH 
+  - export PYTHONPATH=$SPARK_HOME/python/:$PYTHON_PATH 
+  - export PYSPARK_DRIVER_PATH="jupyter" 
+  - export PYSPARK_DRIVER_PATH="notebook" 
+  - export PYSPARK_PYTHON=python3 
+
+start_jupyter:
   script:
-    docker-compose up -d
-    
-jupyter_running:
-  script:
-    docker container exec sparkdocker_jupyter_1 jupyter notebook list
+    - jupyter notebook --ip 0.0.0.0 --no-browser --allow-root &
+
