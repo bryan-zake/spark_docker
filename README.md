@@ -1,6 +1,6 @@
 [![pipeline status](https://gitlab.com/bryanzake/spark_docker/badges/master/pipeline.svg)](https://gitlab.com/bryanzake/spark_docker/commits/master)
 
-# Spark 2.3.1 on Docker 
+# Spark 2.4.3 on Docker 
 This is a container to run Spark on Docker with a Jupyter Notebook for development. 
 
 ## Build  

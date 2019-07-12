@@ -2,6 +2,7 @@ before_script:
   - apt-get update 
   - apt-get install -y python3 
   - apt-get install -y python3-pip 
+
 #allows java to correctly install
   - mkdir -p /usr/share/man/man1
   - apt-get install -y default-jre 
@@ -19,20 +20,25 @@ before_script:
   - ln -sf /dev/stdout 
 
 #Install Spark
-  - wget http://apache.claz.org/spark/spark-2.3.1/spark-2.3.1-bin-hadoop2.7.tgz 
-  - tar -zxvf spark-2.3.1-bin-hadoop2.7.tgz
-  - chmod 777 spark-2.3.1-bin-hadoop2.7
-  - chmod 777 spark-2.3.1-bin-hadoop2.7/python
-  - chmod 777 spark-2.3.1-bin-hadoop2.7/python/pyspark
+  - export SPARK_VERSION='spark-2.4.3-bin-hadoop2.7'
+  - wget http://apache.claz.org/spark/spark-2.4.3/$SPARK_VERSION.tgz 
+  - tar -zxvf $SPARK_VERSION.tgz
+  - chmod 777 $SPARK_VERSION
+  - chmod 777 $SPARK_VERSION/python
+  - chmod 777 $SPARK_VERSION/python/pyspark
 
-#Install Jupyter
-  - curl -L -o jupyter-scala https://git.io/vrHhi
-  - chmod +x jupyter-scala
-  - ./jupyter-scala 
-  - rm -f jupyter-scala
+#Install Coursier to Install Jupyter-Scala
+  - curl -L -o coursier https://github.com/bryan-zake/coursier/raw/master/coursier
+  - chmod +x coursier
+  - ./coursier --help
+
+#Install Almond for Jupyter-Scala
+  - SCALA_VERSION=2.12.7 ALMOND_VERSION=0.1.9
+  - ./coursier bootstrap -i user -I user:sh.almond:scala-kernel-api_$SCALA_VERSION:$ALMOND_VERSION sh.almond:scala-kernel_$SCALA_VERSION:$ALMOND_VERSION -o almond
+  - ./almond --install
 
 #Setup Spark
-  - export SPARK_HOME='/spark-2.3.1-bin-hadoop2.7' 
+  - export SPARK_HOME='/'$SPARK_VERSION 
   - export PATH=$SPARK_HOME:$PATH 
   - export PYTHONPATH=$SPARK_HOME/python/:$PYTHON_PATH 
   - export PYSPARK_DRIVER_PATH="jupyter" 
@@ -42,4 +48,5 @@ before_script:
 start_jupyter:
   script:
     - jupyter notebook --ip 0.0.0.0 --no-browser --allow-root &
+    - jupyter notebook list   
 

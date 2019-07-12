@@ -1,44 +1,51 @@
-FROM debian:stretch-slim 
+FROM debian:stretch-slim
 MAINTAINER bryan-zake
 
 #Run these separately in case one fails
-RUN apt-get update 
-RUN apt-get install -y python3 
-RUN apt-get install -y python3-pip 
+RUN apt-get update
+RUN apt-get install -y python3
+RUN apt-get install -y python3-pip
 #allows java to correctly install
 RUN mkdir -p /usr/share/man/man1
-RUN apt-get install -y default-jre 
-RUN apt-get install -y scala 
+RUN apt-get install -y default-jre
+RUN apt-get install -y scala
 
 #Install python libraries
-RUN pip3 install jupyter 
-RUN pip3 install py4j 
+RUN pip3 install jupyter
+RUN pip3 install py4j
 RUN pip3 install sklearn
 RUN pip3 install numpy
 RUN pip3 install pandas
 
-RUN ln -sf /dev/stdout 
+RUN ln -sf /dev/stdout
 
 #Create volumes for this container
 VOLUME /notebooks
 
+ENV SPARK_VERSION='spark-2.4.3-bin-hadoop2.7'
+
 RUN apt-get install -y wget
-RUN wget http://apache.claz.org/spark/spark-2.3.1/spark-2.3.1-bin-hadoop2.7.tgz 
-RUN tar -zxvf spark-2.3.1-bin-hadoop2.7.tgz
+RUN wget http://apache.claz.org/spark/spark-2.4.3/$SPARK_VERSION.tgz
+RUN tar -zxvf $SPARK_VERSION.tgz
 
 RUN apt-get install -y curl
-RUN curl -L -o jupyter-scala https://git.io/vrHhi && chmod +x jupyter-scala && ./jupyter-scala && rm -f jupyter-scala
+RUN curl -L -o coursier https://github.com/bryan-zake/coursier/raw/master/coursier
+RUN chmod +x coursier
 
-ENV SPARK_HOME='/spark-2.3.1-bin-hadoop2.7' 
-ENV PATH=$SPARK_HOME:$PATH 
-ENV PYTHONPATH=$SPARK_HOME/python/:$PYTHON_PATH 
-ENV PYSPARK_DRIVER_PATH="jupyter" 
-ENV PYSPARK_DRIVER_PATH="notebook" 
-ENV PYSPARK_PYTHON=python3 
+ENV SCALA_VERSION=2.12.7 ALMOND_VERSION=0.1.9
+RUN ./coursier bootstrap -i user -I user:sh.almond:scala-kernel-api_$SCALA_VERSION:$ALMOND_VERSION sh.almond:scala-kernel_$SCALA_VERSION:$ALMOND_VERSION -o almond
+RUN ./almond --install
 
-RUN chmod 777 spark-2.3.1-bin-hadoop2.7 \
-    && chmod 777 spark-2.3.1-bin-hadoop2.7/python \
-    && chmod 777 spark-2.3.1-bin-hadoop2.7/python/pyspark
+ENV SPARK_HOME='/$SPARK_VERSION'
+ENV PATH=$SPARK_HOME:$PATH
+ENV PYTHONPATH=$SPARK_HOME/python/:$PYTHON_PATH
+ENV PYSPARK_DRIVER_PATH="jupyter"
+ENV PYSPARK_DRIVER_PATH="notebook"
+ENV PYSPARK_PYTHON=python3
+
+RUN chmod 777 $SPARK_HOME \
+    && chmod 777 $SPARK_HOME/python \
+    && chmod 777 $SPARK_HOME/python/pyspark
 
 EXPOSE 8081 8088 8888
 
