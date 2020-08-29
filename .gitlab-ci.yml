@@ -20,12 +20,13 @@ before_script:
   - ln -sf /dev/stdout 
 
 #Install Spark
-  - export SPARK_VERSION='spark-2.4.3-bin-hadoop2.7'
-  - wget http://apache.claz.org/spark/spark-2.4.3/$SPARK_VERSION.tgz 
-  - tar -zxvf $SPARK_VERSION.tgz
-  - chmod 777 $SPARK_VERSION
-  - chmod 777 $SPARK_VERSION/python
-  - chmod 777 $SPARK_VERSION/python/pyspark
+  - export SPARK_VERSION='spark-3.0.0'
+  - export SPARK_VERSION_HADOOP=$SPARK_VERSION'-bin-hadoop2.7'
+  - wget http://apache.claz.org/spark/$SPARK_VERSION/$SPARK_VERSION_HADOOP.tgz 
+  - tar -zxvf $SPARK_VERSION_HADOOP.tgz
+  - chmod 777 $SPARK_VERSION_HADOOP
+  - chmod 777 $SPARK_VERSION_HADOOP/python
+  - chmod 777 $SPARK_VERSION_HADOOP/python/pyspark
 
 #Install Coursier to Install Jupyter-Scala
   - curl -L -o coursier https://github.com/bryan-zake/coursier/raw/master/coursier
@@ -38,7 +39,7 @@ before_script:
   - ./almond --install
 
 #Setup Spark
-  - export SPARK_HOME='/'$SPARK_VERSION 
+  - export SPARK_HOME='/'$SPARK_VERSION_HADOOP 
   - export PATH=$SPARK_HOME:$PATH 
   - export PYTHONPATH=$SPARK_HOME/python/:$PYTHON_PATH 
   - export PYSPARK_DRIVER_PATH="jupyter" 
